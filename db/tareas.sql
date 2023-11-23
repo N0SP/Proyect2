@@ -25,25 +25,42 @@ DELIMITER $$
 --
 -- Procedimientos
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_agregar_tarea` (IN `p_titulo` VARCHAR(255), IN `p_descripcion` TEXT, IN `p_fecha_compromiso` DATE, IN `p_editada` VARCHAR(3), IN `p_responsable` VARCHAR(255), IN `p_tipo_tarea` VARCHAR(255), IN `p_estado` VARCHAR(255))   BEGIN
+CREATE DEFINER=`oestzobt_norman`@`190.140.13.254` PROCEDURE `sp_actualizar_estado`(IN tarea_id INT, IN nuevo_estado VARCHAR(255))
+BEGIN
+    UPDATE tareas SET estado = nuevo_estado WHERE id = tarea_id;
+END
+
+CREATE DEFINER=`oestzobt_norman`@`190.140.13.254` PROCEDURE `sp_agregar_tarea`(IN `p_titulo` VARCHAR(255), IN `p_descripcion` TEXT, IN `p_fecha_compromiso` DATE, IN `p_editada` VARCHAR(3), IN `p_responsable` VARCHAR(255), IN `p_tipo_tarea` VARCHAR(255), IN `p_estado` VARCHAR(255))
+BEGIN
     INSERT INTO tareas (titulo, descripcion, fecha_compromiso, editada, responsable, tipo_tarea, estado)
     VALUES (p_titulo, p_descripcion, p_fecha_compromiso, p_editada, p_responsable, p_tipo_tarea, p_estado);
-END$$
+END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_buscar_tareas` (IN `termino` VARCHAR(255))   BEGIN
+CREATE DEFINER=`oestzobt_norman`@`190.140.13.254` PROCEDURE `sp_buscar_tareas`(IN `termino` VARCHAR(255))
+BEGIN
     SELECT * FROM tareas 
-    WHERE titulo LIKE CONCAT('%', termino, '%') 
-    OR descripcion LIKE CONCAT('%', termino, '%') 
-    OR fecha_compromiso LIKE CONCAT('%', termino, '%') 
-    OR editada LIKE CONCAT('%', termino, '%') 
-    OR responsable LIKE CONCAT('%', termino, '%') 
-    OR tipo_tarea LIKE CONCAT('%', termino, '%') 
-    OR estado LIKE CONCAT('%', termino, '%');
-END$$
+    WHERE titulo LIKE CONCAT('%', termino, '%') COLLATE utf8mb4_general_ci
+    OR descripcion LIKE CONCAT('%', termino, '%') COLLATE utf8mb4_general_ci
+    OR fecha_compromiso LIKE CONCAT('%', termino, '%') COLLATE utf8mb4_general_ci
+    OR editada LIKE CONCAT('%', termino, '%') COLLATE utf8mb4_general_ci
+    OR responsable LIKE CONCAT('%', termino, '%') COLLATE utf8mb4_general_ci
+    OR tipo_tarea LIKE CONCAT('%', termino, '%') COLLATE utf8mb4_general_ci
+    OR estado LIKE CONCAT('%', termino, '%') COLLATE utf8mb4_general_ci;
+END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_editar` (IN `p_id` INT, IN `p_titulo` VARCHAR(255), IN `p_descripcion` TEXT, IN `p_fecha_compromiso` DATE, IN `p_editada` DATETIME, IN `p_responsable` VARCHAR(255), IN `p_tipo_tarea` VARCHAR(255), IN `p_estado` VARCHAR(255))   BEGIN
-    UPDATE tareas 
-    SET 
+CREATE DEFINER=`oestzobt_norman`@`190.140.13.254` PROCEDURE `sp_editar_tarea`(
+    IN p_id INT,
+    IN p_titulo VARCHAR(255),
+    IN p_descripcion VARCHAR(255),
+    IN p_fecha_compromiso DATE,
+    IN p_editada VARCHAR(255),
+    IN p_responsable VARCHAR(255),
+    IN p_tipo_tarea VARCHAR(255),
+    IN p_estado VARCHAR(255)
+)
+BEGIN
+    UPDATE tareas
+    SET
         titulo = p_titulo,
         descripcion = p_descripcion,
         fecha_compromiso = p_fecha_compromiso,
@@ -52,17 +69,18 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_editar` (IN `p_id` INT, IN `p_ti
         tipo_tarea = p_tipo_tarea,
         estado = p_estado
     WHERE id = p_id;
-END$$
+END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_eliminar_tarea` (IN `tarea_id` INT)   BEGIN
+CREATE DEFINER=`oestzobt_norman`@`190.140.13.254` PROCEDURE `sp_eliminar_tarea`(IN `tarea_id` INT)
+BEGIN
     DELETE FROM tareas WHERE id = tarea_id;
-END$$
+END
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_todos` ()   BEGIN
+CREATE DEFINER=`oestzobt_norman`@`190.140.13.254` PROCEDURE `sp_todos`()
+BEGIN
     SELECT * FROM tareas;
-END$$
+END
 
-DELIMITER ;
 
 -- --------------------------------------------------------
 
